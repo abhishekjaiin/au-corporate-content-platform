@@ -1,0 +1,15 @@
+'use client'
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+
+type Section={heading:string;paragraphs:string[]}
+export default function EditArticle({params}:{params:Promise<{id:string}>}){
+  const [id,setId]=useState(''); const [form,setForm]=useState<any>(null); const [message,setMessage]=useState('')
+  useEffect(()=>{params.then(p=>{setId(p.id);fetch('/api/admin/articles/'+p.id).then(r=>r.json()).then(setForm)})},[params])
+  if(!form)return <main className="admin-shell"><p>Loading article…</p></main>
+  const sections:Section[]=form.content?.sections??[]
+  function updateSection(i:number,key:string,value:any){const next=[...sections];next[i]={...next[i],[key]:value};setForm({...form,content:{...form.content,sections:next}})}
+  function addSection(){setForm({...form,content:{...form.content,sections:[...sections,{heading:'New section',paragraphs:['']} ]}})}
+  async function save(){setMessage('Saving…');const res=await fetch('/api/admin/articles/'+id,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)});const data=await res.json();setMessage(res.ok?'Saved.':data.error??'Save failed.')}
+  return <main className="admin-shell"><header className="admin-top"><div><p className="eyebrow gold">Article editor</p><h1>Edit article</h1><p className="admin-sub">Build the long-form article structure used by the public Insights template.</p></div><Link href="/admin/articles" className="text-link">← Articles</Link></header><div className="admin-form"><label>Title<input value={form.title??''} onChange={e=>setForm({...form,title:e.target.value})}/></label><label>Slug<input value={form.slug??''} onChange={e=>setForm({...form,slug:e.target.value})}/></label><label>Excerpt<textarea value={form.excerpt??''} onChange={e=>setForm({...form,excerpt:e.target.value})}/></label><div className="form-grid"><label>Status<select value={form.status} onChange={e=>setForm({...form,status:e.target.value})}>{['IDEA','DRAFT','REVIEW','APPROVED','SCHEDULED','PUBLISHED','NEEDS_REFRESH'].map(s=><option key={s}>{s}</option>)}</select></label><label>Reading time<input type="number" min="1" value={form.readingTime??5} onChange={e=>setForm({...form,readingTime:Number(e.target.value)})}/></label></div><label>SEO title<input value={form.seoTitle??''} onChange={e=>setForm({...form,seoTitle:e.target.value})}/></label><label>SEO description<textarea value={form.seoDescription??''} onChange={e=>setForm({...form,seoDescription:e.target.value})}/></label><h2>Article sections</h2>{sections.map((s,i)=><div className="admin-section-card" key={i}><input value={s.heading} onChange={e=>updateSection(i,'heading',e.target.value)}/><textarea value={(s.paragraphs??[]).join('\n\n')} onChange={e=>updateSection(i,'paragraphs',e.target.value.split(/\n\s*\n/))}/></div>)}<button className="button" type="button" onClick={addSection}>+ Add section</button><div><button className="button button-gold" type="button" onClick={save}>Save article</button> {message&&<span>{message}</span>}</div></div></main>
+}
