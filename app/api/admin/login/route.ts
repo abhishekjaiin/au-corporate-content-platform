@@ -1,0 +1,3 @@
+import { SignJWT } from 'jose'
+import { NextResponse } from 'next/server'
+export async function POST(request:Request){const form=await request.formData();const email=String(form.get('email')||'');const password=String(form.get('password')||'');if(email!==process.env.ADMIN_EMAIL||password!==process.env.ADMIN_PASSWORD)return NextResponse.redirect(new URL('/admin/login?error=1',request.url));const token=await new SignJWT({email,role:'ADMIN'}).setProtectedHeader({alg:'HS256'}).setIssuedAt().setExpirationTime('8h').sign(new TextEncoder().encode(process.env.AUTH_SECRET||''));const r=NextResponse.redirect(new URL('/admin',request.url));r.cookies.set('au_admin',token,{httpOnly:true,secure:true,sameSite:'lax',maxAge:28800,path:'/'});return r}
