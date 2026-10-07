@@ -1,0 +1,10 @@
+'use client'
+import { useState } from 'react'
+import Link from 'next/link'
+
+export default function NewArticle() {
+  const [form,setForm]=useState({title:'',slug:'',excerpt:'',status:'DRAFT',readingTime:'8',seoTitle:'',seoDescription:''})
+  const [message,setMessage]=useState('')
+  async function save(e:React.FormEvent){e.preventDefault();setMessage('Saving…');const res=await fetch('/api/admin/articles',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...form,content:{sections:[],faqs:[]}})});const data=await res.json();setMessage(res.ok?'Article created.':data.error??'Could not create article.');if(res.ok) location.href='/admin/articles'}
+  return <main className="admin-shell"><header className="admin-top"><div><p className="eyebrow gold">Content operations</p><h1>New article</h1><p className="admin-sub">Create the record first; the long-form editor can then build the article structure.</p></div><Link href="/admin/articles" className="text-link">← Articles</Link></header><form className="admin-form" onSubmit={save}><label>Title<input required value={form.title} onChange={e=>setForm({...form,title:e.target.value})}/></label><label>Slug<input required value={form.slug} onChange={e=>setForm({...form,slug:e.target.value})}/></label><label>Excerpt<textarea value={form.excerpt} onChange={e=>setForm({...form,excerpt:e.target.value})}/></label><div className="form-grid"><label>Status<select value={form.status} onChange={e=>setForm({...form,status:e.target.value})}>{['IDEA','DRAFT','REVIEW','APPROVED','SCHEDULED','PUBLISHED','NEEDS_REFRESH'].map(s=><option key={s}>{s}</option>)}</select></label><label>Reading time (minutes)<input type="number" min="1" value={form.readingTime} onChange={e=>setForm({...form,readingTime:e.target.value})}/></label></div><label>SEO title<input value={form.seoTitle} onChange={e=>setForm({...form,seoTitle:e.target.value})}/></label><label>SEO description<textarea value={form.seoDescription} onChange={e=>setForm({...form,seoDescription:e.target.value})}/></label><button className="button button-gold" type="submit">Create article</button>{message&&<p>{message}</p>}</form></main>
+}
