@@ -1,0 +1,2 @@
+import type { MetadataRoute } from 'next'
+export default function sitemap():MetadataRoute.Sitemap{const base='https://au-corporate-content-platform.vercel.app';return[{url:base,priority:1},{url:base+'/services',priority:.9},{url:base+'/india-entry',priority:.95},{url:base+'/insights',priority:.85},{url:base+'/about',priority:.7}]}
