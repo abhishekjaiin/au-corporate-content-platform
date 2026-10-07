@@ -1,0 +1,13 @@
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import SiteHeader from '@/components/site-header'
+import SiteFooter from '@/components/site-footer'
+import PageHero from '@/components/page-hero'
+import { services } from '@/lib/content'
+import { ArrowRight } from 'lucide-react'
+export function generateStaticParams(){return services.map(s=>({slug:s.slug}))}
+export default async function ServicePage({params}:{params:Promise<{slug:string}>}){
+ const {slug}=await params; const service=services.find(s=>s.slug===slug); if(!service) notFound()
+ return <><SiteHeader/><main><PageHero eyebrow={'Practice · '+service.number} title={service.title}><p>{service.summary}</p></PageHero>
+ <section className="article-layout section"><article className="article-body"><p className="lead">A useful engagement starts with the question behind the compliance requirement. AU Corporate helps businesses understand the Indian requirement, sequence the work and maintain the operating discipline afterwards.</p><h2>Who this is for</h2><ul className="check-list">{service.bestFor.map(x=><li key={x}>{x}</li>)}</ul><h2>What the practice covers</h2>{service.sections.map((x,i)=><section className="article-section" key={x}><span className="section-index">0{i+1}</span><div><h3>{x}</h3><p>We assess the relevant Indian rules and the group's operating model, then translate the requirement into practical actions, documents, owners and recurring deadlines.</p></div></section>)}<h2>How an engagement typically works</h2><div className="process-grid">{['Understand the objective','Map the Indian requirements','Implement the agreed structure','Maintain the compliance rhythm'].map((x,i)=><div key={x}><span>0{i+1}</span><strong>{x}</strong><p>Clear deliverables and ownership at each stage.</p></div>)}</div><h2>Common questions</h2><div className="faq-list">{['What information is needed to begin?','Can this be handled alongside an existing finance team?','What continues after the initial work?'].map(q=><details key={q}><summary>{q}</summary><p>The answer depends on the entity, sector, parent jurisdiction and current stage of the India operation. We scope the requirement before recommending a work plan.</p></details>)}</div></article><aside className="inquiry-card"><p className="eyebrow gold">Discuss your India plans</p><h3>Make the next decision clearer.</h3><p>Tell us what you are planning and we can identify the relevant India workstreams.</p><Link href="/#contact" className="button button-gold">Send an enquiry <ArrowRight size={16}/></Link><div className="aside-links"><strong>Related</strong><Link href="/india-entry">India entry guide</Link><Link href="/insights">Insights</Link></div></aside></section></main><SiteFooter/></>
+}
