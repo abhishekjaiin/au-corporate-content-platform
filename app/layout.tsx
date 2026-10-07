@@ -3,9 +3,9 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'AU Corporate | Corporate advisory for considered growth',
+  description: 'AU Corporate helps ambitious businesses navigate India entry, corporate compliance, and cross-border growth.',
+  generator: 'AU Corporate Content Platform',
   icons: {
     icon: [
       {
