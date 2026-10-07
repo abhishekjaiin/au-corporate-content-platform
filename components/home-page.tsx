@@ -1,59 +1,23 @@
-'use client'
+import Link from 'next/link'
+import SiteHeader from '@/components/site-header'
+import SiteFooter from '@/components/site-footer'
+import { ArrowRight } from 'lucide-react'
+import { services, jurisdictions, articles } from '@/lib/content'
 
-import { useState } from 'react'
-import { ArrowRight, ChevronDown, Menu, X } from 'lucide-react'
+export default function HomePage(){
+ return <><SiteHeader/><main>
+  <section className="hero" id="top"><div className="hero-content"><p className="eyebrow gold">India entry & business advisory</p><h1>Build your India presence with <em>clarity.</em></h1><p className="hero-copy">AU Corporate helps international and Indian businesses make considered decisions across India entry, business structure, tax, finance, payroll and ongoing compliance.</p><Link href="/india-entry" className="button button-gold">Explore India entry <ArrowRight size={16}/></Link></div><div className="hero-mark" aria-hidden="true"><div className="mark-ring ring-one"/><div className="mark-ring ring-two"/><span>AU</span></div><div className="hero-bottom"><span>Understand · Establish · Operate · Grow</span><span>India-focused advisory</span></div></section>
 
-const services = [
-  { number: '01', title: 'India entry & jurisdiction', text: 'A clear route from market intent to an operating structure that is compliant, practical, and built to scale.' },
-  { number: '02', title: 'Corporate compliance', text: 'Reliable company secretarial, tax, accounting, payroll, and ongoing compliance support.' },
-  { number: '03', title: 'Cross-border advisory', text: 'Connected guidance for foreign businesses navigating India and Indian businesses going global.' },
-]
+  <section className="section"><div className="section-heading"><p className="eyebrow">The India lifecycle</p><h2>One connected view from <em>entry to operation.</em></h2><p className="section-intro">The decisions made before incorporation often shape tax, funding, people, reporting and compliance long afterwards. We organise the work around that lifecycle.</p></div><div className="lifecycle-grid">{['Understand the objective','Choose the structure','Establish the presence','Get compliant','Operate, grow or exit'].map((x,i)=><div key={x}><span>0{i+1}</span><h3>{x}</h3><p>Practical guidance for the decision at this stage.</p></div>)}</div></section>
 
-const insights = [
-  { category: 'India entry', title: 'A practical starting point for entering the Indian market', date: '6 min read' },
-  { category: 'Compliance', title: 'The operating discipline behind a resilient company', date: '8 min read' },
-  { category: 'Cross-border', title: 'From incorporation to an intelligent operating model', date: '5 min read' },
-]
+  <section className="section services-section" id="services"><div className="section-heading"><p className="eyebrow">The practice</p><h2>Relevant specialists for <em>the decisions ahead.</em></h2></div><div className="service-grid">{services.slice(0,6).map(s=><article className="service-card" key={s.slug}><span className="card-number">{s.number}</span><div><h3>{s.title}</h3><p>{s.summary}</p><Link href={'/services/'+s.slug} className="text-link">Explore practice <ArrowRight size={15}/></Link></div></article>)}</div></section>
 
-function Logo() {
-  return <a href="#top" className="logo" aria-label="AU Corporate home"><span>AU</span><strong>CORPORATE</strong></a>
-}
+  <section className="jurisdiction-strip"><div><p className="eyebrow gold">Jurisdiction-specific guidance</p><h2>Your India structure should reflect <em>where you come from.</em></h2><p>Our most developed country journey is USA → India, supported by dedicated guides for other major markets.</p></div><div className="jurisdiction-mini">{jurisdictions.map(j=><Link key={j.slug} href={'/india-entry/'+j.slug}>{j.label}<ArrowRight size={14}/></Link>)}</div></section>
 
-function Header() {
-  const [open, setOpen] = useState(false)
-  return <header className="site-header">
-    <div className="nav-wrap">
-      <Logo />
-      <nav className={open ? 'nav-links is-open' : 'nav-links'} aria-label="Main navigation">
-        <a href="#services" onClick={() => setOpen(false)}>Services</a>
-        <a href="#approach" onClick={() => setOpen(false)}>Our approach</a>
-        <a href="#insights" onClick={() => setOpen(false)}>Insights</a>
-        <a href="#contact" className="nav-contact" onClick={() => setOpen(false)}>Start a conversation <ArrowRight size={15} /></a>
-      </nav>
-      <button className="menu-toggle" onClick={() => setOpen(!open)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open}>{open ? <X /> : <Menu />}</button>
-    </div>
-  </header>
-}
+  <section className="approach-section" id="approach"><div className="approach-inner"><div><p className="eyebrow gold">Our approach</p><h2>Understand first.<br/><em>Then build.</em></h2></div><div className="approach-copy"><p>We start with the commercial objective and connect the relevant Indian structure, regulatory, tax, finance and people considerations into one practical work plan.</p><Link href="/about" className="button button-light">The firm <ArrowRight size={16}/></Link></div></div><div className="approach-rule"/><div className="principles"><span>01 / Diagnose</span><span>02 / Establish</span><span>03 / Operationalise</span><span>04 / Execute</span><span>05 / Partner</span></div></section>
 
-function Services() {
-  return <section className="section services-section" id="services">
-    <div className="section-heading"><p className="eyebrow">What we do</p><h2>Clarity for the decisions<br /><em>that move business forward.</em></h2></div>
-    <div className="service-grid">{services.map((service) => <article className="service-card" key={service.number}><span className="card-number">{service.number}</span><div><h3>{service.title}</h3><p>{service.text}</p><a href="#contact" className="text-link">Explore service <ArrowRight size={15} /></a></div></article>)}</div>
-  </section>
-}
+  <section className="section insights-section" id="insights"><div className="insights-top"><div><p className="eyebrow">Knowledge & insights</p><h2>Useful thinking for <em>India operations.</em></h2></div><Link href="/insights" className="text-link">View all insights <ArrowRight size={15}/></Link></div><div className="insight-grid">{articles.map((a,i)=><article className={i===0?'insight-card featured':'insight-card'} key={a.slug}><div className="insight-visual"><span>AU / {String(i+1).padStart(2,'0')}</span></div><p className="insight-category">{a.category} <span>· {a.read}</span></p><h3>{a.title}</h3><Link href={'/insights/'+a.slug} className="text-link">Read article <ArrowRight size={15}/></Link></article>)}</div></section>
 
-function Approach() {
-  return <section className="approach-section" id="approach"><div className="approach-inner"><div><p className="eyebrow gold">Our approach</p><h2>Specialist thinking.<br /><em>Practical outcomes.</em></h2></div><div className="approach-copy"><p>Business decisions across borders should feel considered, not complicated. AU Corporate brings together the right disciplines, context, and people to make the next step clear.</p><a href="#contact" className="button button-light">How we work <ArrowRight size={16} /></a></div></div><div className="approach-rule" /><div className="principles"><span>01 / Understand the whole picture</span><span>02 / Make complexity usable</span><span>03 / Build for what comes next</span></div></section>
-}
-
-function Insights() {
-  return <section className="section insights-section" id="insights"><div className="insights-top"><div><p className="eyebrow">Perspectives</p><h2>Useful thinking for<br /><em>what comes next.</em></h2></div><a href="#insights" className="text-link">View all insights <ArrowRight size={15} /></a></div><div className="insight-grid">{insights.map((item, index) => <article className={index === 0 ? 'insight-card featured' : 'insight-card'} key={item.title}><div className="insight-visual"><span>AU / {String(index + 1).padStart(2, '0')}</span></div><p className="insight-category">{item.category} <span>· {item.date}</span></p><h3>{item.title}</h3><a href="#contact" className="text-link">Read insight <ArrowRight size={15} /></a></article>)}</div></section>
-}
-
-function Contact() {
-  return <section className="contact-section" id="contact"><div><p className="eyebrow gold">Start a conversation</p><h2>Let's make the<br /><em>next step clear.</em></h2><p className="contact-note">Tell us a little about what you are working towards. We will connect you with the right person.</p></div><form className="inquiry-form" onSubmit={(event) => event.preventDefault()}><label>Name<input type="text" name="name" placeholder="Your name" /></label><label>Work email<input type="email" name="email" placeholder="you@company.com" /></label><label>How can we help?<textarea name="message" rows={3} placeholder="A little about your question or project" /></label><button className="button button-gold" type="submit">Send enquiry <ArrowRight size={16} /></button></form></section>
-}
-
-export default function HomePage() {
-  return <><Header /><main id="top"><section className="hero"><div className="hero-content"><p className="eyebrow">Corporate advisory · India & beyond</p><h1>Make business<br /><em>move with purpose.</em></h1><p className="hero-copy">AU Corporate helps ambitious businesses navigate the decisions, structures, and obligations that make growth possible.</p><a href="#contact" className="button button-gold">Talk to AU Corporate <ArrowRight size={16} /></a></div><div className="hero-mark" aria-hidden="true"><div className="mark-ring ring-one" /><div className="mark-ring ring-two" /><span>AU</span></div><div className="hero-bottom"><span>Built for considered growth</span><span className="scroll-cue">Scroll to explore <ChevronDown size={16} /></span></div></section><Services /><Approach /><Insights /><Contact /></main><footer className="footer"><Logo /><p>Corporate advisory for businesses with somewhere to go.</p><span>© 2026 AU Corporate</span></footer></>
+  <section className="contact-section" id="contact"><div><p className="eyebrow gold">Start a conversation</p><h2>Let's make the <em>next step clear.</em></h2><p className="contact-note">Tell us what you are planning in India. We can help identify the relevant workstreams and where to start.</p></div><div className="contact-actions"><Link href="/india-entry" className="button button-gold">Explore India entry <ArrowRight size={16}/></Link><p>For a specific question, contact AU Corporate and we will direct it to the appropriate team.</p></div></section>
+ </main><SiteFooter/></>
 }
